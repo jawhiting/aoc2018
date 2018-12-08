@@ -1,7 +1,7 @@
 
-val nodes = mutableMapOf<Char, Node>()
+private val nodes = mutableMapOf<Char, Node>()
 
-data class Node(val id: Char, val inputs: MutableSet<Char>, var complete: Boolean = false) {
+private data class Node(val id: Char, val inputs: MutableSet<Char>, var complete: Boolean = false) {
 
     fun available(): Boolean {
         // available if not complete and all inputs are complete
@@ -41,7 +41,7 @@ fun main() {
 
 
 
-val testInput = "Step C must be finished before step A can begin.\n" +
+private val testInput = "Step C must be finished before step A can begin.\n" +
         "Step C must be finished before step F can begin.\n" +
         "Step A must be finished before step B can begin.\n" +
         "Step A must be finished before step D can begin.\n" +
@@ -49,7 +49,7 @@ val testInput = "Step C must be finished before step A can begin.\n" +
         "Step D must be finished before step E can begin.\n" +
         "Step F must be finished before step E can begin."
 
-val input7 = "Step B must be finished before step G can begin.\n" +
+private val input7 = "Step B must be finished before step G can begin.\n" +
         "Step G must be finished before step J can begin.\n" +
         "Step J must be finished before step F can begin.\n" +
         "Step U must be finished before step Z can begin.\n" +
