@@ -1,6 +1,3 @@
-import kotlin.math.max
-
-
 fun main() {
     println(score(3, 5, 8))
     println(score(122, 79, 57))

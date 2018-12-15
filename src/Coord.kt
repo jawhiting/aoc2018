@@ -2,7 +2,12 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
-class Coord(val x: Int, val y: Int) {
+data class Coord(val x: Int, val y: Int) : Comparable<Coord> {
+    override fun compareTo(other: Coord): Int {
+        val xs = y.compareTo(other.y)
+        if( xs == 0 ) return x.compareTo(other.x)
+        return xs
+    }
 
     fun move(d: Direction): Coord {
         return Coord(this.x+d.x, this.y+d.y)
@@ -27,4 +32,10 @@ class Rect(val c1: Coord, val c2: Coord) {
     fun inside(c: Coord) : Boolean {
         return c.x >= topLeft.x && c.x <= bottomRight.x && c.y >= topLeft.y && c.y <= bottomRight.y
     }
+}
+
+
+fun main() {
+    val l = sortedSetOf(Coord(9, 0), Coord(1,1), Coord(5, 0))
+    println(l)
 }

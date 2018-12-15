@@ -1,31 +1,33 @@
 
-private val nodes = mutableMapOf<Char, Node>()
 
-private data class Node(val id: Char, val inputs: MutableSet<Char>, var complete: Boolean = false) {
+private data class Node7(val id: Char, val inputs: MutableSet<Char>, var complete: Boolean = false) {
 
     fun available(): Boolean {
         // available if not complete and all inputs are complete
         if( !complete ) {
-            return inputs.count { !nodes[it]!!.complete } == 0
+            return inputs.count { !nodes7[it]!!.complete } == 0
         }
         return false
     }
 }
+
+private val nodes7 = mutableMapOf<Char, Node7>()
+
 
 fun main() {
     input7.lines().forEach {
         val i = it[5]
         val n = it[36]
         // get node n
-        val node = nodes.getOrPut(n, {Node(n, mutableSetOf())})
+        val node = nodes7.getOrPut(n, {Node7(n, mutableSetOf())})
         // make sure input node exists
-        nodes.putIfAbsent(i, Node(i, mutableSetOf()))
+        nodes7.putIfAbsent(i, Node7(i, mutableSetOf()))
         node.inputs.add(i)
     }
 
-    println(nodes)
+    println(nodes7)
 
-    var availableNodes = nodes.values.filter { it.available() }
+    var availableNodes = nodes7.values.filter { it.available() }
 
     while( availableNodes.isNotEmpty() ) {
         // just
@@ -33,9 +35,9 @@ fun main() {
         val firstNode = availableNodes.map { it.id }.sorted().first()
         print(firstNode)
         // mark them complete
-        nodes[firstNode]!!.complete = true
+        nodes7[firstNode]!!.complete = true
         // get next available
-        availableNodes = nodes.values.filter { it.available() }
+        availableNodes = nodes7.values.filter { it.available() }
     }
 }
 
