@@ -1,3 +1,5 @@
+import java.awt.Color
+import java.awt.image.BufferedImage
 import java.util.*
 
 
@@ -166,15 +168,18 @@ internal class Battle(val nodes: Map<Coord, Node>, val entities: List<Entity>) {
 
     fun run(log: Boolean = false, elfAttack: Int = 3): Int {
         var cycles = 0
+        val frames = mutableListOf<BufferedImage>()
 
         while(tick(elfAttack)) {
             println("Cycle $cycles")
 
             if( log) println("Ended cycle $cycles")
             if( log) println(this)
+            frames.add(toImage().toImage())
             cycles++
 
         }
+        GridImage.animate(frames, "day15.gif")
         println("Combat ended after $cycles")
         println(this)
         return cycles * entities.filter(Entity::alive).map { it.hp }.sum()
@@ -255,6 +260,26 @@ internal class Battle(val nodes: Map<Coord, Node>, val entities: List<Entity>) {
         }.toString(true)
         //return GridString().addAll(nodes) { if( !it.open ) '#' else it.occupant?.race?.name?.first() ?: '.'}.toString(true)
     }
+
+    fun toImage(): GridImage {
+        val grid = GridImage(10)
+        grid.addAll(nodes) {
+            if( !it.open ) {
+                Color.DARK_GRAY
+            } else {
+                if( it.occupant != null ) {
+                    when(it.occupant!!.race) {
+                        Race.E -> Color.GREEN
+                        Race.G -> Color.RED
+                    }
+                }
+                else {
+                    Color.LIGHT_GRAY
+                }
+            }
+        }
+        return grid
+    }
 }
 
 fun main() {
@@ -302,6 +327,8 @@ private fun testCombat() {
 
 private fun testRun() {
     val b = Battle.parse(input2)
+
+    b.toImage().write("day15.gif")
     println(b.run())
 }
 
