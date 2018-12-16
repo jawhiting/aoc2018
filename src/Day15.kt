@@ -146,7 +146,7 @@ internal class Battle(val nodes: Map<Coord, Node>, val entities: List<Entity>) {
     fun part2(elfAttack: Int, log: Boolean = false) : Int? {
         println("Starting with attack power $elfAttack")
         var cycles = 0
-
+        val frames = mutableListOf<BufferedImage>()
         val elves = entities.filter { it.race == Race.E }
 
         while(tick(elfAttack)) {
@@ -154,13 +154,16 @@ internal class Battle(val nodes: Map<Coord, Node>, val entities: List<Entity>) {
 
             if( elves.filterNot( Entity::alive).isNotEmpty() ) {
                 println("Elf died on power $elfAttack")
+                GridImage.animate(frames, "elf$elfAttack.gif")
                 return null
             }
             if( log) println("Ended cycle $cycles")
             if( log) println(this)
+            frames.add(toImage().toImage())
             cycles++
 
         }
+        GridImage.animate(frames, "elf$elfAttack.gif")
         println("Combat ended after $cycles")
         println(this)
         return cycles * entities.filter(Entity::alive).map { it.hp }.sum()
@@ -283,8 +286,8 @@ internal class Battle(val nodes: Map<Coord, Node>, val entities: List<Entity>) {
 }
 
 fun main() {
-    testRun()
-//    part2()
+//    testRun()
+    part2()
 }
 
 private fun part2() {
