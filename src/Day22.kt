@@ -44,18 +44,9 @@ private class Calculator(val depth: Long, val start: Coord, val target: Coord) {
 
     fun part2() {
         val start = Position(Coord(0,0), Equip.TORCH)
-        // populate nodes twice target distance
-        val nodes = mutableMapOf<Position, Region>()
-        for(x in 0..target.x+20) {
-            for( y in 0..target.y+20) {
-                val c = Coord(x,y)
-                val r = risk(c, depth)
-                for( e in r.equip ) {
-                    nodes[Position(c, e)] = r
-                }
-            }
-        }
-        val result = dijkstra2(start, nodes)
+
+        val result = PathFinder.dijkstra2(start, Position(target, Equip.TORCH), this::nextMoves)
+//        val result = dijkstra2(start)
         println(result.first[Position(target, Equip.TORCH)])
         // 995 too low
         // 1003 too low
@@ -76,10 +67,9 @@ private class Calculator(val depth: Long, val start: Coord, val target: Coord) {
 
     }
 
-    private fun dijkstra2(start: Position, nodes: Map<Position, Region>): Pair<Map<Position, Int>, Map<Position, Position>> {
+    private fun dijkstra2(start: Position): Pair<Map<Position, Int>, Map<Position, Position>> {
         val distances = mutableMapOf<Position, Int>()
 
-        nodes.keys.forEach{ distances.put(it, Integer.MAX_VALUE)}
         distances[start] = 0
         val prev = mutableMapOf<Position, Position>()
         val unvisited = PriorityQueue<Pair<Position, Int>> { a, b -> a.second.compareTo(b.second)}
@@ -95,6 +85,10 @@ private class Calculator(val depth: Long, val start: Coord, val target: Coord) {
 
             if( n.second == Int.MAX_VALUE ) {
                 // finished
+                break
+            }
+            if( n.first.c == target && n.first.e == Equip.TORCH) {
+                println("Reached")
                 break
             }
             // find available neighbours
