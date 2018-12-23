@@ -46,7 +46,6 @@ private class Calculator(val depth: Long, val start: Coord, val target: Coord) {
         val start = Position(Coord(0,0), Equip.TORCH)
 
         val result = PathFinder.dijkstra2(start, Position(target, Equip.TORCH), this::nextMoves)
-//        val result = dijkstra2(start)
         println(result.first[Position(target, Equip.TORCH)])
         // 995 too low
         // 1003 too low
@@ -66,48 +65,6 @@ private class Calculator(val depth: Long, val start: Coord, val target: Coord) {
     data class Position(val c: Coord, val e: Equip) {
 
     }
-
-    private fun dijkstra2(start: Position): Pair<Map<Position, Int>, Map<Position, Position>> {
-        val distances = mutableMapOf<Position, Int>()
-
-        distances[start] = 0
-        val prev = mutableMapOf<Position, Position>()
-        val unvisited = PriorityQueue<Pair<Position, Int>> { a, b -> a.second.compareTo(b.second)}
-        unvisited.add(start to 0)
-        var count = 0
-        while( unvisited.isNotEmpty() ) {
-
-            if( count++% 100 == 0) {
-                println("Count: $count Unvisited: ${unvisited.size}")
-            }
-            // get the closest node
-            val n = unvisited.poll()!!
-
-            if( n.second == Int.MAX_VALUE ) {
-                // finished
-                break
-            }
-            if( n.first.c == target && n.first.e == Equip.TORCH) {
-                println("Reached")
-                break
-            }
-            // find available neighbours
-            val neighbors = nextMoves(n.first)
-            for (neighbor in neighbors) {
-
-                val dist = n.second + neighbor.second
-                if( dist < distances[neighbor.first] ?: Integer.MAX_VALUE ) {
-                    distances[neighbor.first] = dist
-                    prev[neighbor.first] = n.first
-                    unvisited.add(neighbor.first to dist)
-                }
-            }
-        }
-
-        return distances to prev
-    }
-
-
 
     private fun nextMoves(current: Position): List<Pair<Position, Int>> {
         val moves = mutableListOf<Pair<Position, Int>>()
